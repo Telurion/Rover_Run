@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/Corentin Monsallier/Desktop/Projet algo/cmake-build-rover_rub",
-		"source" : "C:/Users/Corentin Monsallier/Desktop/Projet algo"
+		"build" : "C:/Users/Corentin Monsallier/Desktop/Rover_Run/cmake-build-rover_rub",
+		"source" : "C:/Users/Corentin Monsallier/Desktop/Rover_Run"
 	},
 	"version" : 
 	{

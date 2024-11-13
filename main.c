@@ -8,8 +8,9 @@
 #define PHASES 9
 
 int main() {
+    //srand((unsigned)time(NULL)); //Used to have truly random
     t_move *moves = getMovesArray();
-    t_move **all_moves = getAllMoves(*moves);
+
     t_map map = createMapFromFile("..\\maps\\example1.map");
     printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
     for (int i = 0; i < map.y_max; i++)
@@ -28,11 +29,12 @@ int main() {
         }
         printf("\n");
     }
-
     displayMap(map);
     for (int i = 0; i < PHASES; i++) {
         printf("Move %d : %s\n", i+1, getMoveAsString(moves[i]));
     }
+
+    /////////
 
     return 0;
 }

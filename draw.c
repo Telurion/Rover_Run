@@ -4,6 +4,10 @@
 
 #include "draw.h"
 #include "moves.h"
+#include "stack.h"
+#include "queue.h"
+#include "map.h"
+#include "loc.h"
 #include <stdlib.h>
 
 #define NUM_MOVEMENTS 7
@@ -56,35 +60,24 @@ t_move *getMovesArray() {
     return moves;
 }
 
-t_move **getAllMoves(t_move moves){
-    t_move **moves_set;
-    moves_set = (t_move**)malloc(15120 * sizeof(t_move*)); //9*8*7*6*5 = 15120 because 5 elements ==> number of paths on a probability tree
-    int index = 0;
+p_node createNode(int idx, t_localisation loc, t_map map, t_node *parent){
+    t_node *my_node;
+    my_node = (t_node *)malloc(sizeof(t_node));
+    my_node->cost = map.costs[loc.pos.x][loc.pos.y];
+    my_node->index = idx;
+    my_node->nb_sons = PHASES-idx;
+    my_node->nb_remaining_moves;
+    my_node->sons = (t_node **)malloc((PHASES-idx)*sizeof(t_node *));
+    my_node->parent = parent;
 
-    for(int i = 0; i < PHASES; i++) {
-        for(int j = 0; j < PHASES; j++) {
-            if (i != j) {
-                for (int k = 0; k < PHASES; k++) {
-                    if (i != k && j != k) {
-                        for (int l = 0; l < PHASES; l++) {
-                            if (i != l && j != l && k != l) {
-                                for (int m = 0; m < PHASES; m++) {
-                                    if (i != m && j != m && k != m && l != m) {
-                                        moves_set[index] = (t_move*)malloc(5 * sizeof(t_move));
-                                        moves_set[index][0] = i;
-                                        moves_set[index][1] = j;
-                                        moves_set[index][2] = k;
-                                        moves_set[index][3] = l;
-                                        moves_set[index][4] = m;
-                                        index++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return moves_set;
+    my_node->loc = loc;             //position : t_localisation
+    my_node->precedent_move;
+    my_node->remaining_moves;
+    return my_node;
 }
+
+t_move *reduceMovesArray(t_move *moves, t_move move) {
+
+}
+
+//Faire fonction avec un tableau de moov et un moov donné et qui renvoie le tableau sans le moov donné
