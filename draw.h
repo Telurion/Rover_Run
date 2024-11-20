@@ -30,8 +30,7 @@ t_move* reduceMovesArray(const t_move*, t_move);
 
 
 #endif //UNTITLED1_DRAW_H
-bool isOutOfBounds(int x, int y, int rows, int cols);
-void buildTree(t_node* root, int depth, t_map* map, int startX, int startY);
+void buildTree(t_node* root, int depth, t_map* map, t_position start_coord);
 int calculateNewCost(int currentCost, int move, t_soil terrain);
 bool isLeaf(t_node* node);
 t_node* findMinLeaf(t_node* root, int* minCost);

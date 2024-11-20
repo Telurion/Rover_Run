@@ -113,28 +113,26 @@ t_move* reduceMovesArray(const t_move* moves, t_move move) {
 
 //Faire fonction avec un tableau de moov et un moov donné et qui renvoie le tableau sans le moov donné
 
-// Check if coordinates are out of bounds
 
-bool isOutOfBounds(int x, int y, int rows, int cols) {
-    return x < 0 || x >= rows || y < 0 || y >= cols;
-}
 
-void buildTree(t_node * root, int depth, t_map* map, int startX, int startY) {
-    if (depth == 0 || isOutOfBounds(startX, startY, map->x_max, map->y_max)) {
+
+void buildTree(t_node * root, int depth, t_map* map, t_position start_coord) {
+    if (depth == 0 || isValidLocalisation((start_coord, map->x_max, map->y_max)) {
         return;
     }
 
     for (int i = 0; i < 9; i++) {
         int newX = startX + (i % 3 - 1); // Calculate new X position
         int newY = startY + (i / 3 - 1); // Calculate new Y position
+        t_position new_position = {newX, newY};
 
-        if (!isOutOfBounds(newX, newY, map->x_max, map->y_max)) {
+        if (!isValidLocalisation(new_position, map->x_max, map->y_max)) {
             t_node * child = malloc(sizeof(t_node));
             child->cost = calculateNewCost(root->cost, i, map->soils[newX][newY]);
             child->precedent_move = i;
 
             root->sons[i] = child;
-            buildTree(child, depth - 1, map, newX, newY);
+            buildTree(child, depth - 1, map, new_position);
         } else {
             root->sons[i] = NULL; // Invalid move
         }
@@ -161,7 +159,7 @@ bool isLeaf(t_node* node) {
 void freeMap(t_map* map) {
     for (int i = 0; i < map->x_max; i++) {
         free(map->soils[i]);
-        free(map->cost[i]);
+        free(map->costs[i]);
     }
     free(map->soils);
     free(map->costs);
