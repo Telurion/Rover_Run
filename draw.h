@@ -24,8 +24,9 @@ typedef struct s_node
     int nb_remaining_moves;
 };
 typedef struct s_node t_node, *p_node;
-
-t_move *getMovesArray();
+void freenode(t_node*);
+t_move* getMovesArray();
+t_move* reduceMovesArray(const t_move*, t_move);
 
 
 #endif //UNTITLED1_DRAW_H

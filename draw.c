@@ -67,17 +67,47 @@ p_node createNode(int idx, t_localisation loc, t_map map, t_node *parent){
     my_node->cost = map.costs[loc.pos.x][loc.pos.y];
     my_node->index = idx;
     my_node->nb_sons = PHASES-idx;
-    my_node->nb_remaining_moves;
     my_node->sons = (t_node **)malloc((PHASES-idx)*sizeof(t_node *));
     my_node->parent = parent;
-
     my_node->loc = loc;             //position : t_localisation
-    my_node->precedent_move;
-    my_node->remaining_moves;
+    my_node->precedent_move=-1;
+    my_node->remaining_moves=NULL;
     return my_node;
 }
+void freenode(t_node* node) {
+    if (!node) return;
 
-t_move *reduceMovesArray(t_move *moves, t_move move) {
+    if (node->sons) {
+        for (int i = 0; i < node->nb_sons; i++) {
+            freenode(node->sons[i]);
+        }
+    }
+    free(node->sons);
+    node->sons = NULL;
+
+    if (node->remaining_moves) {
+        free(node->remaining_moves);
+    }
+    node->remaining_moves = NULL;
+    free(node);
+}
+
+
+t_move* reduceMovesArray(const t_move* moves, t_move move) {
+    int remaining_count = 0;
+    for (int i = 0; i < PHASES; i++) {
+        if (moves[i] != move) {
+            remaining_count++;
+        }
+    }
+    t_move* reduced_moves = (t_move *)malloc(remaining_count * sizeof(t_move));
+    int j = 0;
+    for (int i = 0; i < PHASES; i++) {
+        if (moves[i] != move) {
+            reduced_moves[j++] = moves[i];
+        }
+    }
+    return reduced_moves;
 
 }
 
