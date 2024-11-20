@@ -60,6 +60,7 @@ t_move *getMovesArray() {
     return moves;
 }
 
+
 p_node createNode(int idx, t_localisation loc, t_map map, t_node *parent){
     t_node *my_node;
     my_node = (t_node *)malloc(sizeof(t_node));
@@ -81,3 +82,58 @@ t_move *reduceMovesArray(t_move *moves, t_move move) {
 }
 
 //Faire fonction avec un tableau de moov et un moov donné et qui renvoie le tableau sans le moov donné
+
+// Check if coordinates are out of bounds
+
+bool isOutOfBounds(int x, int y, int rows, int cols) {
+    return x < 0 || x >= rows || y < 0 || y >= cols;
+}
+
+void buildTree(t_node * root, int depth, t_map* map, int startX, int startY) {
+    if (depth == 0 || isOutOfBounds(startX, startY, map->x_max, map->y_max)) {
+        return;
+    }
+
+    for (int i = 0; i < 9; i++) {
+        int newX = startX + (i % 3 - 1); // Calculate new X position
+        int newY = startY + (i / 3 - 1); // Calculate new Y position
+
+        if (!isOutOfBounds(newX, newY, map->x_max, map->y_max)) {
+            t_node * child = malloc(sizeof(t_node));
+            child->cost = calculateNewCost(root->cost, i, map->soils[newX][newY]);
+            child->precedent_move = i;
+
+            root->sons[i] = child;
+            buildTree(child, depth - 1, map, newX, newY);
+        } else {
+            root->sons[i] = NULL; // Invalid move
+        }
+    }
+}
+
+// Calculate the new cost based on the terrain type
+int calculateNewCost(int currentCost, int move, t_soil terrain) {
+    int moveCost = 1; // Default cost
+    if (terrain == ERG) moveCost *= 2; // Increased cost for ERG
+    if (terrain == CREVASSE) return 10000; // High cost for crevasse
+    return currentCost + moveCost;
+}
+
+bool isLeaf(t_node* node) {
+    for (int i = 0; i < 9; i++) {
+        if (node->sons[i] != NULL)
+            return false;
+    }
+    return true;
+}
+
+// Free allocated memory for the map
+void freeMap(t_map* map) {
+    for (int i = 0; i < map->x_max; i++) {
+        free(map->soils[i]);
+        free(map->cost[i]);
+    }
+    free(map->soils);
+    free(map->costs);
+    free(map);
+}
