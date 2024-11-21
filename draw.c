@@ -61,19 +61,73 @@ t_move *getMovesArray() {
 }
 
 
-p_node createNode(int idx, t_localisation loc, t_map map, t_node *parent){
-    t_node *my_node;
-    my_node = (t_node *)malloc(sizeof(t_node));
+p_node *createNode(int idx, t_localisation loc, t_map map, t_node *parent, t_move *remaining_move, t_move *precedent_move){
+    p_node *my_node = (p_node *)malloc(sizeof(p_node));
     my_node->cost = map.costs[loc.pos.x][loc.pos.y];
     my_node->index = idx;
-    my_node->nb_sons = PHASES-idx;
-    my_node->sons = (t_node **)malloc((PHASES-idx)*sizeof(t_node *));
+    my_node->nb_sons = PHASES-4-idx;
+    my_node->sons = (t_node **)malloc((PHASES-idx)*sizeof(t_node *));                               ///
     my_node->parent = parent;
-    my_node->loc = loc;             //position : t_localisation
-    my_node->precedent_move=-1;
-    my_node->remaining_moves=NULL;
+    my_node->loc = loc;
+    my_node->precedent = precedent_move;
+    my_node->remaining = reduceMovesArray(remaining_move, my_node->precedent, my_node->nb_sons);
     return my_node;
 }
+
+
+t_move *reduceMovesArray(t_move *moves, t_move move, int length) {
+    t_move *new_moves = (t_move*) malloc(length*sizeof(t_move)-1);
+    int found = 0;
+    for (int i = 0; i < length; i++) {
+        if (move != moves[i]){
+            if (found == 1) {
+                new_moves[i-1] = moves[i];
+            }
+            else {
+                new_moves[i] = moves[i];
+            }
+        }
+        if (moves[i] == move) {
+            found = 1;
+        }
+    }
+    return new_moves;
+}
+
+
+
+
+
+//addChild
+
+
+
+
+
+
+
+
+
+
+
+
+//createEmptyTree
+
+//createTree
+
+//getBestPath
+
+//ifWinOrFail
+
+
+
+
+
+
+
+
+
+
 void freenode(t_node* node) {
     if (!node) return;
 
@@ -91,29 +145,6 @@ void freenode(t_node* node) {
     node->remaining_moves = NULL;
     free(node);
 }
-
-
-t_move* reduceMovesArray(const t_move* moves, t_move move) {
-    int remaining_count = 0;
-    for (int i = 0; i < PHASES; i++) {
-        if (moves[i] != move) {
-            remaining_count++;
-        }
-    }
-    t_move* reduced_moves = (t_move *)malloc(remaining_count * sizeof(t_move));
-    int j = 0;
-    for (int i = 0; i < PHASES; i++) {
-        if (moves[i] != move) {
-            reduced_moves[j++] = moves[i];
-        }
-    }
-    return reduced_moves;
-
-}
-
-//Faire fonction avec un tableau de moov et un moov donné et qui renvoie le tableau sans le moov donné
-
-
 
 
 void buildTree(t_node * root, int depth, t_map* map, t_position start_coord) {

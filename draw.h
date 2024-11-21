@@ -22,8 +22,15 @@ typedef struct s_node
     t_move precedent_move;               //mouvement précédent
     t_move* remaining_moves;              //possibilités de mouvement
     int nb_remaining_moves;
-};
+} t_node;
 typedef struct s_node t_node, *p_node;
+
+typedef struct s_tree
+{
+    p_node root;
+} t_tree;
+
+
 void freenode(t_node*);
 t_move* getMovesArray();
 t_move* reduceMovesArray(const t_move*, t_move);
