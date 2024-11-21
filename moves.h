@@ -24,7 +24,8 @@ typedef enum e_move
     B_10, // Backward 10 m
     T_LEFT, // Turn left (+90°)
     T_RIGHT, // Turn right (-90°)
-    U_TURN // Turn back (180°)
+    U_TURN,
+    NO_MOVE
 } t_move;
 
 /**
