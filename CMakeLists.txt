@@ -14,8 +14,5 @@ add_executable(untitled1 main.c
         queue.h
         stack.c
         stack.h
-        draw.c
-        draw.h
         tree.c
-        tree.h
-        Rover_Run.c)
+        tree.h)
